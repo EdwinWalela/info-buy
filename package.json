@@ -1,0 +1,16 @@
+{
+  "name": "webscrapper",
+  "version": "1.0.0",
+  "description": "webcrawler tutorial",
+  "main": "crawler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "edwin",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "fs": "0.0.1-security",
+    "request": "^2.88.0"
+  }
+}
