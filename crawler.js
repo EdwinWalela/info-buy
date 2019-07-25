@@ -95,6 +95,7 @@ const kilimalCrawler = (URL) => {
     })
 }
 
-// crawl websites
-jumiaCrawler(JUMIA_URL);
-kilimalCrawler(KILIMALL_URL);
+// uncomment to crawl websites
+
+// jumiaCrawler(JUMIA_URL);
+// kilimalCrawler(KILIMALL_URL);
