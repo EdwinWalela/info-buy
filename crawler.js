@@ -114,6 +114,7 @@ const jijiCrawler = (URL) => {
             price = Number(price.replace("KSh","").trim().replace(",",""));
             let url = $(el).find('a.qa-advert-title.js-advert-link').attr('href');
             let condition =  $(el).find('small.b-list-advert__item-attr').text();
+           
             if(condition.includes("New") || name.includes('New')){
                 condition = 'new'
             }else{
@@ -133,12 +134,44 @@ const jijiCrawler = (URL) => {
 }
 
 const pigiameCrawler = (URL) => {
+   // Send request
+   request(URL,(err,res,body)=>{
+    if(err){
+        console.log('error\n',err);
+    }
+    // Parse DOM
+    let $ = cheerio.load(body);
 
+    //Locate Products in DOM
+    $('div.listings-cards__list-item').each((i,el)=>{
+        // Get product details
+        let name = $(el).find('div.listing-card__header__title').text().trim();
+        let price = $(el).find('span.listing-card__price__value').text().trim();
+        price = Number(price.replace("KSh","").trim().replace(",",""));
+        let url = $(el).find('a').attr('href');
+        let condition =  $(el).find('div.listing-card__header__tags').text();
+       
+
+        if(condition.includes("New") || name.includes('New')){
+            condition = 'new'
+        }else{
+            condition = 'used'
+        }
+
+        let item = {
+            name,
+            price,
+            url,
+            condition
+        }
+        console.log(item)
+    })
+}) 
 }
 
 // uncomment to crawl websites
 
 // jumiaCrawler(JUMIA_URL);
 // kilimalCrawler(KILIMALL_URL);
-// pigiameCrawler(PIGIAME_URL);
-jijiCrawler(JIJI_URL);
+pigiameCrawler(PIGIAME_URL);
+// jijiCrawler(JIJI_URL);
