@@ -6,7 +6,9 @@ const query = 'huawei';
 
 // URLs to scrap
 const JUMIA_URL = `https://www.jumia.co.ke/catalog/?q=${query}`;
-const KILIMALL_URL =`https://www.kilimall.co.ke/?act=search&keyword=${query}`
+const KILIMALL_URL =`https://www.kilimall.co.ke/?act=search&keyword=${query}`;
+const JIJI_URL = `https://jiji.co.ke/search?query=${query}`;
+const PIGIAME_URL = `https://www.pigiame.co.ke/classifieds?q=${query}`;
 
 // Jumia Crawler
 const jumiaCrawler = (URL) => {
@@ -95,7 +97,17 @@ const kilimalCrawler = (URL) => {
     })
 }
 
+const jijiCrawler = (URL) => {
+
+}
+
+const pigiameCrawler = (URL) => {
+
+}
+
 // uncomment to crawl websites
 
 // jumiaCrawler(JUMIA_URL);
 // kilimalCrawler(KILIMALL_URL);
+// pigiameCrawler(PIGIAME_URL);
+jijiCrawler(JIJI_URL);
