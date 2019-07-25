@@ -1,8 +1,9 @@
 const request = require("request");
 const cheerio = require("cheerio");
 const Axios = require("axios");
+const fs = require("fs");
 
-const query = 'huawei+y7';
+const query = 'iphone x';
 
 // URLs to scrap
 const JUMIA_URL = `https://www.jumia.co.ke/catalog/?q=${query}`;
@@ -11,7 +12,7 @@ const JIJI_URL = `https://jiji.co.ke/search?query=${query}`;
 const PIGIAME_URL = `https://www.pigiame.co.ke/classifieds?q=${query}`;
 
 // Jumia Crawler
-const jumiaCrawler = (URL) => {
+const jumiaCrawler = async (URL) => {
     // Send request
     request(URL,(err,res,body)=>{
         if(err){
@@ -171,7 +172,11 @@ const pigiameCrawler = (URL) => {
 
 // uncomment to crawl websites
 
-// jumiaCrawler(JUMIA_URL);
-// kilimalCrawler(KILIMALL_URL);
-pigiameCrawler(PIGIAME_URL);
-// jijiCrawler(JIJI_URL);
+console.log(`About to query ' ${query} ' from jumia,kilimall,pigiame and jiji(olx)....`);
+
+setTimeout(()=>{
+    jumiaCrawler(JUMIA_URL);
+    kilimalCrawler(KILIMALL_URL);
+    pigiameCrawler(PIGIAME_URL);
+    jijiCrawler(JIJI_URL);
+},6000);
