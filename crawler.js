@@ -82,48 +82,18 @@ const kilimallAsync = async(URL)=>{
     return items;
 }
 
-// Kilimall Crawler
-const kilimalCrawler = (URL) => {
-       // Send request
-       request(URL,(err,res,body)=>{
-        if(err){
-            console.log('error\n',err);
-        }
-        // Parse DOM
-        let $ = cheerio.load(body);
-    
-        //Locate Products in DOM
-        $('ul.list_pic>li.item').each(async(i,el)=>{
-            // Get product details
-            let price = $(el).find('div.goods-price-info.clearfix>div.goods-price>em').text();
-            // Format price
-            price = Number(price.replace("KSh","").trim().replace(",",""));
+const kilimallGetDatesAsync = async(URL)=>{
+    let date;
+    try{
+        let delivery = await Axios.get(URL);
+        let $ = cheerio.load(delivery.data);
+        date = $('div.goods_logistics_desc>div>span').text().replace(".","").trim();
+    }catch(err){
+        console.log(err);
+    }
+    return date;
+}   
 
-            let name = $(el).find('div.goods-info>h2.goods-name>a').text().trim();
-            let url = $(el).find('div.goods-info>h2.goods-name>a').attr('href');
-            let date;
-      
-            if(url){
-                try{
-                    let delivery = await Axios.get(url);
-                    let $ = cheerio.load(delivery.data);
-                    date = $('div.goods_logistics_desc>div>span').text().replace(".","").trim();
-                }catch(err){
-                    console.log(err);
-                }
-            }
-                  
-            let item = {
-                name,
-                price,
-                url,
-                date
-            }
-
-            console.log(item)
-        })
-    })
-}
 // Jiji Crawler
 const jijiCrawler = (URL) => {
  // Send request
@@ -197,7 +167,6 @@ const pigiameCrawler = (URL) => {
 }) 
 }
 
-// kilimalCrawler(KILIMALL_URL);
 // pigiameCrawler(PIGIAME_URL);
 // jijiCrawler(JIJI_URL);
 
@@ -211,10 +180,12 @@ const pigiameCrawler = (URL) => {
 // }())
 
 // Kilimall Crawler
-(async function(){
-    let res = await kilimallAsync(KILIMALL_URL);
-    console.log(res);
-}())
+// (async function(){
+//     // Get all products
+//     let res = await kilimallAsync(KILIMALL_URL);
+//     // Get a products delivery date
+//     let date = await kilimallGetDatesAsync(res[0].url);
+// }())
 
 
 
