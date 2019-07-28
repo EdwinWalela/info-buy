@@ -38,7 +38,9 @@ const pigiameAsync = async(URL)=>{
          }
          items.push(item);
      })
-     return items;
+     return items.filter(item=>{
+         return item.name !== '';
+     });
 }
 
 module.exports = pigiameAsync

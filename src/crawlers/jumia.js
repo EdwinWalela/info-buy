@@ -28,7 +28,9 @@ const jumiaAsync = async(URL) =>{
          items.push(item);
     });
     
-    return items;
+    return items.filter(item=>{
+        return item.name !== '';
+    });
 }
 
 const jumiaGetDatesAsync = async(URL)=>{
