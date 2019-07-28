@@ -14,10 +14,18 @@ const PIGIAME_URL = `https://www.pigiame.co.ke/classifieds?q=${query}`;
 const JIJI_URL = `https://jiji.co.ke/search?query=${query}`;
 
 (async function(){
-    let jumiaRes = await jumiaCrawler.jumiaAsync(JUMIA_URL);
-    let kilimallRes = await kilimallCrawler.kilimallAsync(KILIMALL_URL);
-    let pigiameRes = await pigiameCrawler(PIGIAME_URL);
-    let jijiRes = await jijiCrawler(JIJI_URL);
+    let jumia = await jumiaCrawler.jumiaAsync(JUMIA_URL);
+    let kilimall = await kilimallCrawler.kilimallAsync(KILIMALL_URL);
+    let pigiame = await pigiameCrawler(PIGIAME_URL);
+    let jiji = await jijiCrawler(JIJI_URL);
+    
+    let res = {
+        jumia,
+        kilimall,
+        pigiame,
+        jiji
+    }
+    console.log(res);
 }())
 
 
