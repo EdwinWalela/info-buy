@@ -20,7 +20,7 @@ const pigiameAsync = async(URL)=>{
          price = Number(price.replace("KSh","").trim().replace(",",""));
          let url = $(el).find('a').attr('href');
          let condition =  $(el).find('div.listing-card__header__tags').text();
-        
+        console.log(thumb);
  
          if(condition.includes("New") || name.includes('New')){
              condition = 'new'
