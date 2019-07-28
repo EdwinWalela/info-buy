@@ -21,6 +21,8 @@ app.get('/',(req,res)=>{
 app.get('/api/spider',async(req,res)=>{
     let query = req.query.q;
     let source = req.query.src;
+    let condition = req.query.condition;
+
     let sources = [];
     let resultCount = 0;
     let data = {};
@@ -44,9 +46,15 @@ app.get('/api/spider',async(req,res)=>{
         sources.push('kilimall')
         resultCount+=kilimall.length
     }else if(source == 'pigiame'){
-        data.pigiame = pigiame
+        if(condition){
+            data.pigiame = pigiame.filter(item=>{
+                return item.condition == condition
+            })
+        }else{
+            data.pigiame = pigiame
+        }
         sources.push('pigiame')
-        resultCount+=pigiame.length
+        resultCount+=data.pigiame.length
     }else{
         data = {
             jumia,
