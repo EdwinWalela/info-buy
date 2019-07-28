@@ -1,7 +1,6 @@
 const request = require("request");
 const cheerio = require("cheerio");
 const Axios = require("axios");
-const fs = require("fs");
 
 const query = 'iphone x';
 
@@ -10,6 +9,7 @@ const JUMIA_URL = `https://www.jumia.co.ke/catalog/?q=${query}`;
 const KILIMALL_URL =`https://www.kilimall.co.ke/?act=search&keyword=${query}`;
 const JIJI_URL = `https://jiji.co.ke/search?query=${query}`;
 const PIGIAME_URL = `https://www.pigiame.co.ke/classifieds?q=${query}`;
+
 
 // Jumia Crawler
 const jumiaCrawler = async (URL) => {
@@ -49,10 +49,54 @@ const jumiaCrawler = async (URL) => {
                 date
             }
             if(item.name !== ''){
-                console.log(item);
+                // console.log(item);
             }
         })
     })
+}
+
+const jumiaAsync = async(URL) =>{
+    let dom;
+    try{
+        dom = await Axios.get(URL);
+    }catch(err){
+        console.log(err);
+        return;
+    }
+    let $ = cheerio.load(dom.data);
+    let items = [];
+
+    //Locate Products in DOM
+    $('.sku.-gallery').map((i,el)=>{
+         // Get product details
+        let price = Number($(el).find('span.price').children('span').next().attr('data-price') || 0);
+        let name = $(el).find('span.name').text();
+        let url = $(el).find('a.link').attr('href') || 'https://google.com';
+        let date ;
+        let item = {
+            name,
+            price,
+            url,
+            date
+        }
+         items.push(item);
+    });
+    
+    return items;
+}
+
+const jumiaGetDatesAsync = async(URL)=>{
+    let date;
+    try{
+        let delivery = await Axios.get(URL);
+        let $ = cheerio.load(delivery.data);
+        $('section.sku-detail').each((i,el)=>{
+            date = $(el).find('div.-delivery>span.-description').text();
+        })
+    }catch(err){
+        console.log(err);
+    }
+    return date;
 }
 
 // Kilimall Crawler
@@ -97,7 +141,7 @@ const kilimalCrawler = (URL) => {
         })
     })
 }
-
+// Jiji Crawler
 const jijiCrawler = (URL) => {
  // Send request
     request(URL,(err,res,body)=>{
@@ -133,7 +177,7 @@ const jijiCrawler = (URL) => {
         })
     })
 }
-
+// Pigiame Crawler
 const pigiameCrawler = (URL) => {
    // Send request
    request(URL,(err,res,body)=>{
@@ -170,13 +214,17 @@ const pigiameCrawler = (URL) => {
 }) 
 }
 
-// uncomment to crawl websites
+jumiaCrawler(JUMIA_URL);
+// kilimalCrawler(KILIMALL_URL);
+// pigiameCrawler(PIGIAME_URL);
+// jijiCrawler(JIJI_URL);
 
-console.log(`About to query ' ${query} ' from jumia,kilimall,pigiame and jiji(olx)....`);
+let res;
+(async function(){
+    res = await jumiaAsync(JUMIA_URL);
+    let date = await jumiaGetDatesAsync(res[0].url);
+    console.log(date);
+}())
 
-setTimeout(()=>{
-    jumiaCrawler(JUMIA_URL);
-    kilimalCrawler(KILIMALL_URL);
-    pigiameCrawler(PIGIAME_URL);
-    jijiCrawler(JIJI_URL);
-},6000);
+
+
