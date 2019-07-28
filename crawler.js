@@ -21,7 +21,7 @@ const PIGIAME_URL = `https://www.pigiame.co.ke/classifieds?q=${query}`;
 
     let res = {
         // jumia,
-        kilimall,
+        // kilimall,
         // pigiame,
     }
     console.log(res);

@@ -20,8 +20,9 @@ const pigiameAsync = async(URL)=>{
          price = Number(price.replace("KSh","").trim().replace(",",""));
          let url = $(el).find('a').attr('href');
          let condition =  $(el).find('div.listing-card__header__tags').text();
-        console.log(thumb);
- 
+        let thumb = $(el).find('img.listing-card__image__resource').attr('data-src');
+       
+
          if(condition.includes("New") || name.includes('New')){
              condition = 'new'
          }else{
@@ -32,7 +33,8 @@ const pigiameAsync = async(URL)=>{
              name,
              price,
              url,
-             condition
+             condition,
+             thumb
          }
          items.push(item);
      })
