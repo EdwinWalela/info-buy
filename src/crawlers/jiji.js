@@ -11,6 +11,7 @@ const jijiCrawlerAsync = async(URL)=>{
     }
     let $ = cheerio.load(dom.data);
     let items = [];
+    console.log($('div.h-flex-1-1-100.h-ph-0').html())
     //Locate Products in DOM
     $('div.h-flex-1-1-100.h-ph-0>div.b-list-advert__item.js-handle-click-ctr.js-advert-link').each((i,el)=>{
         // Get product details
