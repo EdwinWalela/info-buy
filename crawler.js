@@ -2,7 +2,7 @@ const request = require("request");
 const cheerio = require("cheerio");
 const Axios = require("axios");
 
-const query = 'iphone x';
+const query = 'iphone+x';
 
 // URLs to scrap
 const JUMIA_URL = `https://www.jumia.co.ke/catalog/?q=${query}`;
@@ -94,6 +94,43 @@ const kilimallGetDatesAsync = async(URL)=>{
     return date;
 }   
 
+const jijiCrawlerAsync = async(URL)=>{
+    let dom;
+    try{
+        dom = await Axios.get(URL);
+    }catch(err){
+        console.log(err);
+        return;
+    }
+    let $ = cheerio.load(dom.data);
+    let items = [];
+    //Locate Products in DOM
+    $('div.h-flex-1-1-100.h-ph-0>div.b-list-advert__item.js-handle-click-ctr.js-advert-link').each((i,el)=>{
+        // Get product details
+        let name = $(el).find('a.qa-advert-title.js-advert-link').text().trim();
+        let price = $(el).find('div.b-list-advert__item-price>span').text().trim();
+        price = Number(price.replace("KSh","").trim().replace(",",""));
+        let url = $(el).find('a.qa-advert-title.js-advert-link').attr('href');
+        let condition =  $(el).find('small.b-list-advert__item-attr').text();
+       
+        if(condition.includes("New") || name.includes('New')){
+            condition = 'new'
+        }else{
+            condition = 'used'
+        }
+
+        let item = {
+            name,
+            price,
+            url,
+            condition
+        }
+
+        items.push(item)
+    })
+    return items;
+}
+
 // Jiji Crawler
 const jijiCrawler = (URL) => {
  // Send request
@@ -103,7 +140,7 @@ const jijiCrawler = (URL) => {
         }
         // Parse DOM
         let $ = cheerio.load(body);
-
+        console.log(URL);
         //Locate Products in DOM
         $('div.h-flex-1-1-100.h-ph-0>div.b-list-advert__item.js-handle-click-ctr.js-advert-link').each((i,el)=>{
             // Get product details
@@ -126,7 +163,7 @@ const jijiCrawler = (URL) => {
                 condition
             }
 
-            console.log(item)
+            // console.log(item)
         })
     })
 }
@@ -167,6 +204,44 @@ const pigiameCrawler = (URL) => {
 }) 
 }
 
+const pigiameAsync = async(URL)=>{
+    let dom;
+    try{
+        dom = await Axios.get(URL);
+    }catch(err){
+        console.log(err);
+        return;
+    }
+    let $ = cheerio.load(dom.data);
+    let items = [];
+
+     //Locate Products in DOM
+     $('div.listings-cards__list-item').each((i,el)=>{
+         // Get product details
+         let name = $(el).find('div.listing-card__header__title').text().trim();
+         let price = $(el).find('span.listing-card__price__value').text().trim();
+         price = Number(price.replace("KSh","").trim().replace(",",""));
+         let url = $(el).find('a').attr('href');
+         let condition =  $(el).find('div.listing-card__header__tags').text();
+        
+ 
+         if(condition.includes("New") || name.includes('New')){
+             condition = 'new'
+         }else{
+             condition = 'used'
+         }
+ 
+         let item = {
+             name,
+             price,
+             url,
+             condition
+         }
+         items.push(item);
+     })
+     return items;
+}
+
 // pigiameCrawler(PIGIAME_URL);
 // jijiCrawler(JIJI_URL);
 
@@ -187,5 +262,16 @@ const pigiameCrawler = (URL) => {
 //     let date = await kilimallGetDatesAsync(res[0].url);
 // }())
 
+// Jiji Crawler
+// (async function(){
+//     // Get all products
+//     let res = await jijiCrawlerAsync(JIJI_URL);
+//     console.log(res);
+// }())
 
-
+// Pigiame Crawler
+(async function(){
+    // Get all products
+    let res = await pigiameAsync(PIGIAME_URL);
+    console.log(res)
+}())
