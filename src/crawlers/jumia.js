@@ -18,10 +18,12 @@ const jumiaAsync = async(URL) =>{
         let price = Number($(el).find('span.price').children('span').next().attr('data-price') || 0);
         let name = $(el).find('span.name').text();
         let url = $(el).find('a.link').attr('href') || 'https://google.com';
+        let thumb = $(el).find('a.link>span.shipped-overseas-flag').next().next().find('img.lazy.image').attr('data-src') || '';
         let item = {
             name,
             price,
             url,
+            thumb
         }
          items.push(item);
     });

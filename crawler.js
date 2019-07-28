@@ -20,11 +20,11 @@ const PIGIAME_URL = `https://www.pigiame.co.ke/classifieds?q=${query}`;
     // let jiji = await jijiCrawler(JIJI_URL);
 
     let res = {
-        jumia,
-        kilimall,
-        pigiame,
+        // jumia,
+        // kilimall,
+        // pigiame,
     }
-    console.log(jiji);
+    console.log(res);
 }())
 
 
