@@ -11,50 +11,6 @@ const JIJI_URL = `https://jiji.co.ke/search?query=${query}`;
 const PIGIAME_URL = `https://www.pigiame.co.ke/classifieds?q=${query}`;
 
 
-// Jumia Crawler
-const jumiaCrawler = async (URL) => {
-    // Send request
-    request(URL,(err,res,body)=>{
-        if(err){
-            console.log('error\n',err);
-        }
-        // Parse DOM
-        let $ = cheerio.load(body);
-    
-        //Locate Products in DOM
-        $('.sku.-gallery').each(async(i,el)=>{
-            // Get product details
-            let price = Number($(el).find('span.price').children('span').next().attr('data-price') || 0);
-            let name = $(el).find('span.name').text();
-            let url = $(el).find('a.link').attr('href');
-            let date;
-
-            // Get item's delivery date
-            if(url){
-                try{
-                    let delivery = await Axios.get(url);
-                    let $ = cheerio.load(delivery.data);
-                    $('section.sku-detail').each((i,el)=>{
-                        date = $(el).find('div.-delivery>span.-description').text();
-                    })
-                }catch(err){
-                    console.log(err);
-                }
-            }
-            
-            let item = {
-                name,
-                price,
-                url,
-                date
-            }
-            if(item.name !== ''){
-                // console.log(item);
-            }
-        })
-    })
-}
-
 const jumiaAsync = async(URL) =>{
     let dom;
     try{
@@ -72,12 +28,10 @@ const jumiaAsync = async(URL) =>{
         let price = Number($(el).find('span.price').children('span').next().attr('data-price') || 0);
         let name = $(el).find('span.name').text();
         let url = $(el).find('a.link').attr('href') || 'https://google.com';
-        let date ;
         let item = {
             name,
             price,
             url,
-            date
         }
          items.push(item);
     });
@@ -97,6 +51,35 @@ const jumiaGetDatesAsync = async(URL)=>{
         console.log(err);
     }
     return date;
+}
+
+const kilimallAsync = async(URL)=>{
+    let dom;
+    try{
+        dom = await Axios.get(URL);
+    }catch(err){
+        console.log(err);
+        return;
+    }
+    let $ = cheerio.load(dom.data);
+    let items = [];
+    $('ul.list_pic>li.item').each((i,el)=>{
+        // Get product details
+        let price = $(el).find('div.goods-price-info.clearfix>div.goods-price>em').text();
+        // Format price
+        price = Number(price.replace("KSh","").trim().replace(",",""));
+
+        let name = $(el).find('div.goods-info>h2.goods-name>a').text().trim();
+        let url = $(el).find('div.goods-info>h2.goods-name>a').attr('href');
+    
+        let item = {
+            name,
+            price,
+            url,
+        }
+        items.push(item);
+    })
+    return items;
 }
 
 // Kilimall Crawler
@@ -214,16 +197,23 @@ const pigiameCrawler = (URL) => {
 }) 
 }
 
-jumiaCrawler(JUMIA_URL);
 // kilimalCrawler(KILIMALL_URL);
 // pigiameCrawler(PIGIAME_URL);
 // jijiCrawler(JIJI_URL);
 
-let res;
+
+// Jumia Crawler
+// (async function(){
+//     // Get all products
+//     let res = await jumiaAsync(JUMIA_URL);
+//     // Get a products delivery date
+//     let date = await jumiaGetDatesAsync(res[0].url);
+// }())
+
+// Kilimall Crawler
 (async function(){
-    res = await jumiaAsync(JUMIA_URL);
-    let date = await jumiaGetDatesAsync(res[0].url);
-    console.log(date);
+    let res = await kilimallAsync(KILIMALL_URL);
+    console.log(res);
 }())
 
 
