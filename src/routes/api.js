@@ -95,11 +95,12 @@ router.get('/spider',async(req,res)=>{
             kilimall.sort(ascendingSort);
             pigiame.sort(ascendingSort);
 
+            // Filter out phone cases and covers if they aren't intended
             if(!query.includes("Case") || !query.includes("Cover")){
                 jumia = jumia.filter(item=>{
                     return !(item.name.includes("Case") || item.name.includes("Cover"))
                 })
-                
+
                 kilimall = kilimall.filter(item=>{
                     return !(item.name.includes("Case") || item.name.includes("Cover"))
                 })
