@@ -19,7 +19,7 @@ const jumiaAsync = async(URL) =>{
         let name = $(el).find('span.name').text();
         let url = $(el).find('a.link').attr('href') || 'https://google.com';
         let thumb = $(el).find('a.link>span.shipped-overseas-flag').next().next().find('img.lazy.image').attr('data-src') ;
-         console.log(thumb)
+
         let item = {
             name,
             price,
