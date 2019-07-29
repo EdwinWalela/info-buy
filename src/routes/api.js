@@ -15,9 +15,11 @@ router.get('/spider',async(req,res)=>{
     let data = {};
     let sort = req.query.sort || 'asc';
     let limit = req.query.limit;
+    let best = req.query.best;
+    console.log(best)
 
     if(query==="" || typeof query === "undefined"){
-        res.send({
+        res.status(400).send({
             msg:"Query missing"
         })
         return;
@@ -69,7 +71,6 @@ router.get('/spider',async(req,res)=>{
         pigiame.sort(descendingSort);
     }
     
-
     if(source === 'jumia'){
         data.jumia = jumia;
         sources.push('jumia');
@@ -81,14 +82,33 @@ router.get('/spider',async(req,res)=>{
     }else if(source == 'pigiame'){
         if(condition){
             data.pigiame = pigiame.filter(item=>{
-                return item.condition == condition
+                return item.condition === condition
             })
         }else{
             data.pigiame = pigiame
         }
         sources.push('pigiame')
         resultCount+=data.pigiame.length
-    }else{
+    }else{  
+        if(typeof best !== "undefined"){
+            jumia.sort(ascendingSort);
+            kilimall.sort(ascendingSort);
+            pigiame.sort(ascendingSort);
+
+            if(!query.includes("Case") || !query.includes("Cover")){
+                jumia = jumia.filter(item=>{
+                    return !(item.name.includes("Case") || item.name.includes("Cover"))
+                })
+                
+                kilimall = kilimall.filter(item=>{
+                    return !(item.name.includes("Case") || item.name.includes("Cover"))
+                })
+            }
+            
+            jumia = jumia.slice(0,1);
+            kilimall = jumia.slice(0,1);
+            pigiame = pigiame.slice(0,1);
+        }
         data = {
             jumia,
             kilimall,
