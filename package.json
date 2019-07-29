@@ -4,7 +4,7 @@
   "description": "webcrawler tutorial",
   "main": "index.js",
   "scripts": {
-    "start": "npm start"
+    "start": "node index.js"
   },
   "author": "edwin",
   "license": "MIT",
