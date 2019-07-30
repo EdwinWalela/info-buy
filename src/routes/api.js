@@ -93,7 +93,7 @@ router.get('/spider',async(req,res)=>{
             data = data.concat(pigiame);
         }
         sources.push('pigiame')
-        resultCount+=data.pigiame.length
+        resultCount+=pigiame.length
     }else{  
         if(typeof best !== "undefined"){
             jumia.sort(ascendingSort);
