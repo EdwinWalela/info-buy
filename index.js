@@ -10,9 +10,7 @@ app.use(cors());
 app.use('/api/v1',spiderRoutes);
 
 app.get('/',(req,res)=>{
-    res.send({
-        msg:"Hello World!"
-    })
+    res.send("<a href='https://documenter.getpostman.com/view/4654837/SVYkw1vv?version=latest#0af7828e-b183-4d9f-b4bb-a53cf26374b9'>See Documentation</a>")
 })
 
 app.listen(PORT,()=>{
