@@ -19,13 +19,15 @@ const kilimallAsync = async(URL)=>{
 
         let name = $(el).find('div.goods-info>h2.goods-name>a').text().trim();
         let url = $(el).find('div.goods-info>h2.goods-name>a').attr('href');
-        let thumb = $(el).find('div.goods-pic>a.lazyload').attr('data-src')
+        let thumb = $(el).find('div.goods-pic>a.lazyload').attr('data-src');
+        let source = "kilimall"
 
         let item = {
             name,
             price,
             url,
-            thumb
+            thumb,
+            source
         }
         items.push(item);
     })

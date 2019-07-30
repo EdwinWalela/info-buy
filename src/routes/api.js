@@ -12,7 +12,7 @@ router.get('/spider',async(req,res)=>{
     let condition = req.query.condition;
     let sources = [];
     let resultCount = 0;
-    let data = {};
+    let data = [];
     let sort = req.query.sort || 'asc';
     let limit = req.query.limit;
     let best = req.query.best;
@@ -35,13 +35,6 @@ router.get('/spider',async(req,res)=>{
     let kilimall = await kilimallCrawler.kilimallAsync(KILIMALL_URL);
     let pigiame = await pigiameCrawler(PIGIAME_URL);
     
-    if(typeof limit !== "undefined"){
-        limit = Number(limit);
-        jumia = jumia.slice(0,limit);
-        kilimall = kilimall.slice(0,limit);
-        pigiame = pigiame.slice(0,limit);
-    } 
-
     let ascendingSort = (a,b)=>{
         if(a.price > b.price){
             return 1;
@@ -71,21 +64,33 @@ router.get('/spider',async(req,res)=>{
         pigiame.sort(descendingSort);
     }
     
+    if(typeof limit !== "undefined"){
+        limit = Number(limit);
+        jumia = jumia.slice(0,limit);
+        kilimall = kilimall.slice(0,limit);
+        pigiame = pigiame.slice(0,limit);
+    } 
+
+    // Combine results into a single array
+   
+   
+    
     if(source === 'jumia'){
-        data.jumia = jumia;
+        data = data.concat(jumia);
         sources.push('jumia');
         resultCount+=jumia.length
     }else if(source == 'kilimall'){
-        data.kilimall = kilimall
+        data = data.concat(kilimall);
         sources.push('kilimall')
         resultCount+=kilimall.length
     }else if(source == 'pigiame'){
         if(condition){
-            data.pigiame = pigiame.filter(item=>{
+            pigiame = pigiame.filter(item=>{
                 return item.condition === condition
             })
+            data = data.concat(pigiame);
         }else{
-            data.pigiame = pigiame
+            data = data.concat(pigiame);
         }
         sources.push('pigiame')
         resultCount+=data.pigiame.length
@@ -110,11 +115,9 @@ router.get('/spider',async(req,res)=>{
             kilimall = jumia.slice(0,1);
             pigiame = pigiame.slice(0,1);
         }
-        data = {
-            jumia,
-            kilimall,
-            pigiame
-        }
+        data = data.concat(jumia);
+        data = data.concat(kilimall);
+        data = data.concat(pigiame);
         sources.push('jumia','kilimall','pigiame')
         resultCount+=(jumia.length+kilimall.length+pigiame.length)
     }
