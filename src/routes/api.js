@@ -127,4 +127,8 @@ router.get('/spider',async(req,res)=>{
     })
 })
 
+router.get('/spider/product-dates/:url',async(req,res)=>{
+    
+})
+
 module.exports = router;
