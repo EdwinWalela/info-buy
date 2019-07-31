@@ -40,17 +40,19 @@ router.get('/spider',async(req,res)=>{
         return new RegExp ('\\b'+word+'\\b','i').test(s)
     }
 
-    ignore.forEach(word=>{
-        jumia = jumia.filter(item=>{
-            return !wordSearch(item.name,word)
+    if(ignore.length>0){
+        ignore.forEach(word=>{
+            jumia = jumia.filter(item=>{
+                return !wordSearch(item.name,word)
+            })
+            kilimall = kilimall.filter(item=>{
+                return !wordSearch(item.name,word)
+            })
+            pigiame = pigiame.filter(item=>{
+                return !wordSearch(item.name,word)
+            })
         })
-        kilimall = kilimall.filter(item=>{
-            return !wordSearch(item.name,word)
-        })
-        pigiame = pigiame.filter(item=>{
-            return !wordSearch(item.name,word)
-        })
-    })
+    }
 
     let ascendingSort = (a,b)=>{
         if(a.price > b.price){
