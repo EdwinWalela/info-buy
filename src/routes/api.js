@@ -16,8 +16,8 @@ router.get('/spider',async(req,res)=>{
     let sort = req.query.sort || 'asc';
     let limit = req.query.limit;
     let best = req.query.best;
-    console.log(best)
-
+    let ignore = req.query.ignore.split(" ");
+    
     if(query==="" || typeof query === "undefined"){
         res.status(400).send({
             msg:"Query missing"
@@ -35,6 +35,23 @@ router.get('/spider',async(req,res)=>{
     let kilimall = await kilimallCrawler.kilimallAsync(KILIMALL_URL);
     let pigiame = await pigiameCrawler(PIGIAME_URL);
     
+    // Regex to ignore words
+    let wordSearch = (s,word) =>{
+        return new RegExp ('\\b'+word+'\\b','i').test(s)
+    }
+
+    ignore.forEach(word=>{
+        jumia = jumia.filter(item=>{
+            return !wordSearch(item.name,word)
+        })
+        kilimall = kilimall.filter(item=>{
+            return !wordSearch(item.name,word)
+        })
+        pigiame = pigiame.filter(item=>{
+            return !wordSearch(item.name,word)
+        })
+    })
+
     let ascendingSort = (a,b)=>{
         if(a.price > b.price){
             return 1;
@@ -53,6 +70,7 @@ router.get('/spider',async(req,res)=>{
         }
         return 0;
     }
+
 
     if(sort === 'asc'){
         jumia.sort(ascendingSort);
@@ -100,16 +118,7 @@ router.get('/spider',async(req,res)=>{
             kilimall.sort(ascendingSort);
             pigiame.sort(ascendingSort);
 
-            // Filter out phone cases and covers if they aren't intended
-            if(!query.includes("Case") || !query.includes("Cover")){
-                jumia = jumia.filter(item=>{
-                    return !(item.name.includes("Case") || item.name.includes("Cover"))
-                })
-
-                kilimall = kilimall.filter(item=>{
-                    return !(item.name.includes("Case") || item.name.includes("Cover"))
-                })
-            }
+           
             
             jumia = jumia.slice(0,1);
             kilimall = jumia.slice(0,1);
