@@ -16,7 +16,7 @@ router.get('/spider',async(req,res)=>{
     let sort = req.query.sort || 'asc';
     let limit = req.query.limit;
     let best = req.query.best;
-    let ignore = req.query.ignore.split(" ");
+    let ignore = req.query.ignore.split(" ") || [];
     
     if(query==="" || typeof query === "undefined"){
         res.status(400).send({
