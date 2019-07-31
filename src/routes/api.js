@@ -39,8 +39,9 @@ router.get('/spider',async(req,res)=>{
     let wordSearch = (s,word) =>{
         return new RegExp ('\\b'+word+'\\b','i').test(s)
     }
-
-    if(ignore.length>0){
+console.log(ignore)
+    if(ignore[0]!==""){
+        console.log('a')
         ignore.forEach(word=>{
             jumia = jumia.filter(item=>{
                 return !wordSearch(item.name,word)
@@ -92,9 +93,6 @@ router.get('/spider',async(req,res)=>{
     } 
 
     // Combine results into a single array
-   
-   
-    
     if(source === 'jumia'){
         data = data.concat(jumia);
         sources.push('jumia');
