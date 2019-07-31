@@ -19,7 +19,6 @@ const jumiaAsync = async(URL) =>{
         let name = $(el).find('span.name').text();
         let url = $(el).find('a.link').attr('href') || 'https://google.com';
         let thumb = $(el).find('a.link>div.image-wrapper.default-state>img.lazy.image').attr('data-src');
-        console.log(thumb)
         let source = "jumia";
         let item = {
             name,

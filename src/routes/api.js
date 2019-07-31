@@ -16,9 +16,10 @@ router.get('/spider',async(req,res)=>{
     let sort = req.query.sort || 'asc';
     let limit = req.query.limit;
     let best = req.query.best;
-    let ignore = req.query.ignore;;
+    let ignore = req.query.ignore;
 
-    if(typeof ignore !== "undefined" || ingnore !== ''){
+    console.log(typeof ignore)
+    if(typeof ignore !== "undefined"){
         ignore = req.query.ignore.split(" ");
     } 
     
@@ -44,8 +45,8 @@ router.get('/spider',async(req,res)=>{
         return new RegExp ('\\b'+word+'\\b','i').test(s)
     }
     
-    if(typeof ignore !== "undefined" || ignore !== ''){
-        console.log('a')
+    if(ignore.length > 1){
+        console.log(ignore.length)
         ignore.forEach(word=>{
             jumia = jumia.filter(item=>{
                 return !wordSearch(item.name,word)
